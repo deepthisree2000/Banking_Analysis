@@ -1,0 +1,163 @@
+Last login: Tue Sep 20 12:28:53 on ttys001
+vinay@VinayGovardhanams-MacBook-Pro ~ % sudo mysql -u root -p
+Password:
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 29
+Server version: 8.0.30 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use Inclass
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++-----------------------------------+
+| Tables_in_inclass                 |
++-----------------------------------+
+| Bank_Account_Details              |
+| Bank_Account_Relationship_Details |
+| Bank_Account_Transaction          |
+| BANK_CUSTOMER                     |
+| BANK_CUSTOMER_EXPORT              |
+| BANK_CUSTOMER_MESSAGES            |
+| Bank_Holidays                     |
+| BANK_INTEREST_RATE                |
++-----------------------------------+
+8 rows in set (0.01 sec)
+
+mysql> select * from bank_customer;
++-------------+---------------+---------------------+------------+------------+
+| customer_id | customer_name | Address             | state_code | Telephone  |
++-------------+---------------+---------------------+------------+------------+
+|      123001 | Oliver        | 225-5, Emeryville   | CA         | 1897614500 |
+|      123002 | George        | 194-6,New brighton  | MN         | 1897617000 |
+|      123003 | Harry         | 2909-5,walnut creek | CA         | 1897617866 |
+|      123004 | Jack          | 229-5, Concord      | CA         | 1897627999 |
+|      123005 | Jacob         | 325-7, Mission Dist | SFO        | 1897637000 |
+|      123006 | Noah          | 275-9, saint-paul   | MN         | 1897613200 |
+|      123007 | Charlie       | 125-1,Richfield     | MN         | 1897617666 |
+|      123008 | Robin         | 3005-1,Heathrow     | NY         | 1897614000 |
++-------------+---------------+---------------------+------------+------------+
+8 rows in set (0.01 sec)
+
+mysql> select * from bank_account_details;
++-------------+---------------------+--------------------+----------------+----------------+-------------------+
+| Customer_id | Account_Number      | Account_type       | Balance_amount | Account_status | Relationship_type |
++-------------+---------------------+--------------------+----------------+----------------+-------------------+
+|      123002 | 4000-1956-2001      | SAVINGS            |         400000 | ACTIVE         | P                 |
+|      123003 | 4000-1956-2900      | SAVINGS            |         750000 | INACTIVE       | P                 |
+|      123004 | 4000-1956-3401      | SAVINGS            |         655000 | ACTIVE         | P                 |
+|      123001 | 4000-1956-3456      | SAVINGS            |         200000 | ACTIVE         | P                 |
+|      123005 | 4000-1956-5102      | SAVINGS            |         300000 | ACTIVE         | P                 |
+|      123006 | 4000-1956-5698      | SAVINGS            |         455000 | ACTIVE         | P                 |
+|      123007 | 4000-1956-9977      | RECURRING DEPOSITS |        7025000 | ACTIVE         | S                 |
+|      123001 | 5000-1700-3456      | RECURRING DEPOSITS |        9400000 | ACTIVE         | S                 |
+|      123002 | 5000-1700-5001      | RECURRING DEPOSITS |        7500000 | ACTIVE         | S                 |
+|      123004 | 5000-1700-6091      | RECURRING DEPOSITS |        7500000 | ACTIVE         | S                 |
+|      123008 | 5000-1700-7755      | SAVINGS            |              0 | INACTIVE       | P                 |
+|      123004 | 5000-1700-7791      | RECURRING DEPOSITS |          40000 | ACTIVE         | S                 |
+|      123007 | 5000-1700-9800      | SAVINGS            |         355000 | ACTIVE         | P                 |
+|      123006 | 5800-1700-9800-7755 | Credit Card        |              0 | ACTIVE         | P                 |
+|      123006 | 5890-1970-7706-8912 | Add-on Credit Card |              0 | ACTIVE         | S                 |
+|      123007 | 5900-1900-9877-5543 | Add-on Credit Card |              0 | ACTIVE         | S                 |
+|      123007 | 9000-1700-7777-4321 | Credit Card        |              0 | INACTIVE       | P                 |
++-------------+---------------------+--------------------+----------------+----------------+-------------------+
+17 rows in set (0.00 sec)
+
+mysql> select * from bank_account_relationship_details;
++-------------+---------------------+--------------------+------------------------+
+| Customer_id | Account_Number      | Account_type       | Linking_Account_Number |
++-------------+---------------------+--------------------+------------------------+
+|      123002 | 4000-1956-2001      | SAVINGS            | NULL                   |
+|      123003 | 4000-1956-2900      | SAVINGS            | NULL                   |
+|      123001 | 4000-1956-3456      | SAVINGS            | NULL                   |
+|      123007 | 4000-1956-9977      | RECURRING DEPOSITS | 5000-1700-9800         |
+|      123001 | 5000-1700-3456      | RECURRING DEPOSITS | 4000-1956-3456         |
+|      123002 | 5000-1700-5001      | RECURRING DEPOSITS | 4000-1956-2001         |
+|      123004 | 5000-1700-6091      | RECURRING DEPOSITS | 4000-1956-2900         |
+|      123004 | 5000-1700-7791      | RECURRING DEPOSITS | 4000-1956-2900         |
+|      123007 | 5000-1700-9800      | SAVINGS            | NULL                   |
+|        NULL | 5800-1700-9800-7755 | Credit Card        | 4000-1956-5698         |
+|        NULL | 5890-1970-7706-8912 | Add-on Credit Card | 5800-1700-9800-7755    |
+|        NULL | 5900-1900-9877-5543 | Add-on Credit Card | 9000-1700-7777-4321    |
+|        NULL | 9000-1700-7777-4321 | Credit Card        | 5000-1700-9800         |
++-------------+---------------------+--------------------+------------------------+
+13 rows in set (0.00 sec)
+
+mysql> select * from bank_account_transaction;
++---------------------+--------------------+---------------------+----------+------------------+
+| Account_Number      | Transaction_amount | Transcation_channel | Province | Transaction_Date |
++---------------------+--------------------+---------------------+----------+------------------+
+| 4000-1956-3456      |           -2000.00 | ATM withdrawl       | CA       | 2020-01-13       |
+| 4000-1956-2001      |           -4000.00 | POS-Walmart         | MN       | 2020-02-14       |
+| 4000-1956-2001      |           -1600.00 | UPI transfer        | MN       | 2020-01-19       |
+| 4000-1956-2001      |           -6000.00 | Bankers cheque      | CA       | 2020-03-23       |
+| 4000-1956-2001      |           -3000.00 | Net banking         | CA       | 2020-04-24       |
+| 4000-1956-2001      |           23000.00 | cheque deposit      | MN       | 2020-03-15       |
+| 5000-1700-6091      |           40000.00 | ECS transfer        | NY       | 2020-02-19       |
+| 5000-1700-7791      |           40000.00 | ECS transfer        | NY       | 2020-02-19       |
+| 4000-1956-3401      |            8000.00 | Cash Deposit        | NY       | 2020-01-19       |
+| 4000-1956-5102      |           -6500.00 | ATM withdrawal      | NY       | 2020-03-14       |
+| 4000-1956-5698      |           -9000.00 | Cash Deposit        | NY       | 2020-03-27       |
+| 4000-1956-9977      |           50000.00 | ECS transfer        | NY       | 2020-01-16       |
+| 9000-1700-7777-4321 |           -5000.00 | POS-Walmart         | NY       | 2020-02-17       |
+| 9000-1700-7777-4321 |           -8000.00 | Shopping Cart       | MN       | 2020-03-13       |
+| 9000-1700-7777-4321 |           -2500.00 | Shopping Cart       | MN       | 2020-04-21       |
+| 5800-1700-9800-7755 |           -9000.00 | POS-Walmart         | MN       | 2020-04-13       |
+| 5890-1970-7706-8912 |          -11000.00 | Shopping Cart       | NY       | 2020-03-12       |
+| 4000-1956-9977      |           10000.00 | ECS transfer        | MN       | 2020-02-16       |
+| 4000-1956-9977      |           40000.00 | ECS transfer        | MN       | 2020-03-18       |
+| 4000-1956-9977      |           60000.00 | ECS transfer        | MN       | 2020-04-18       |
+| 4000-1956-9977      |           20000.00 | ECS transfer        | MN       | 2020-03-20       |
+| 4000-1956-9977      |           49000.00 | ECS transfer        | MN       | 2020-06-18       |
++---------------------+--------------------+---------------------+----------+------------------+
+22 rows in set (0.00 sec)
+
+mysql> 
+mysql> 
+mysql> select * from bank_customer_export;
++-------------+---------------+--------------------+------------+------------+
+| customer_id | customer_name | Address            | state_code | Telephone  |
++-------------+---------------+--------------------+------------+------------+
+| 123001      | Oliver        | 225-5, Emeryville  | CA         | 1897614500 |
+| 123002      | George        | 194-6,New brighton | MN         | 189761700  |
++-------------+---------------+--------------------+------------+------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from bank_customer_messages;
++-------------------+-----------------------------------------------------------------+----------------------+
+| Event             | Customer_message                                                | Notice_delivery_mode |
++-------------------+-----------------------------------------------------------------+----------------------+
+| Adhoc             | All Banks are closed due to announcement of National strike     | mobile               |
+| Transaction Limit | Only limited withdrawals per card are allowed from ATM machines | mobile               |
++-------------------+-----------------------------------------------------------------+----------------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from bank_interest_rate;
++--------------------------+---------------+-------+------+
+| account_type             | interest_rate | month | year |
++--------------------------+---------------+-------+------+
+| PRIVILEGED_INTEREST_RATE |          0.08 | 02    | 2020 |
+| RECURRING DEPOSITS       |          0.07 | 02    | 2020 |
+| SAVINGS                  |          0.04 | 02    | 2020 |
++--------------------------+---------------+-------+------+
+3 rows in set (0.00 sec)
+
+mysql> select * from bank_holidays;
++------------+---------------------+---------------------+
+| Holiday    | Start_time          | End_time            |
++------------+---------------------+---------------------+
+| 2020-03-13 | 2020-03-13 00:00:00 | 2020-03-13 00:00:00 |
+| 2020-05-20 | 2020-05-20 00:00:00 | 2020-05-20 00:00:00 |
++------------+---------------------+---------------------+
+2 rows in set (0.00 sec)
+
